@@ -3,6 +3,7 @@ package com.example.mylibrary.service;
 import com.example.mylibrary.domain.Post;
 import com.example.mylibrary.domain.SiteUser;
 import com.example.mylibrary.dto.PostCreateDto;
+import com.example.mylibrary.dto.PostDetailDto;
 import com.example.mylibrary.dto.PostListDto;
 import com.example.mylibrary.repository.PostRepository;
 import com.example.mylibrary.repository.UserRepository;
@@ -42,11 +43,33 @@ public class PostService {
     public List<PostListDto> getAllPosts() {
         return postRepository.findAll().stream().map(post -> {
             PostListDto postResponseDto = new PostListDto();
+            postResponseDto.setPostId(post.getId()); // postId 설정
             postResponseDto.setTitle(post.getTitle());
             postResponseDto.setLocation(post.getLocation());
             postResponseDto.setCost(post.getCost());
             postResponseDto.setAuthorNickname(post.getAuthor().getNickname());
             return postResponseDto;
         }).collect(Collectors.toList());
+    }
+
+    public PostDetailDto getPostById(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+
+        PostDetailDto postDetailDto = new PostDetailDto();
+        postDetailDto.setPostId(post.getId());  // postId를 설정합니다.
+        postDetailDto.setTitle(post.getTitle());
+        postDetailDto.setContent(post.getContent());
+        postDetailDto.setLocation(post.getLocation());
+        postDetailDto.setCost(post.getCost());
+        postDetailDto.setAuthorNickname(post.getAuthor().getNickname());
+        postDetailDto.setCreatedAt(post.getCreatedAt());
+        postDetailDto.setViews(post.getViews());
+
+        // 조회수 증가 로직 추가
+        post.setViews(post.getViews() + 1);
+        postRepository.save(post);
+
+        return postDetailDto;
     }
 }
