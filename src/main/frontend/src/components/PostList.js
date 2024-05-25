@@ -31,17 +31,17 @@ const PostList = () => {
     return (
         <div className="max-w-4xl mx-auto my-8 p-4">
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-3xl font-bold">Posts</h2>
+                <h2 className="text-3xl font-bold">도서</h2>
                 <button 
                     onClick={handleGoToCreate} 
                     className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
                 >
-                    Write a Post
+                    책 등록
                 </button>
             </div>
-            <ul className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {posts.map((post) => (
-                    <li 
+                    <div 
                         key={post.postId} 
                         className="border p-4 rounded-md cursor-pointer hover:bg-gray-100 transition duration-300"
                         onClick={() => handlePostClick(post.postId)}
@@ -50,9 +50,9 @@ const PostList = () => {
                         <p className="text-gray-600">Location: {post.location}</p>
                         <p className="text-gray-600">Cost: {post.cost}</p>
                         <p className="text-gray-600">Author: {post.authorNickname}</p>
-                    </li>
+                    </div>
                 ))}
-            </ul>
+            </div>
         </div>
     );
 };
