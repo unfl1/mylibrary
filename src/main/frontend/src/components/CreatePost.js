@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import API_BASE_URL from '../Config';
 
 const CreatePost = () => {
-  const user = useSelector(state => state.user.user); // Redux 스토어에서 사용자 정보를 가져옵니다.
+  const user = useSelector(state => state.user.user);
+  const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [location, setLocation] = useState('');
@@ -18,7 +20,7 @@ const CreatePost = () => {
       content,
       location,
       cost: parseInt(cost, 10),
-      username: user.username // 사용자 정보에서 username을 가져와서 요청 데이터에 포함합니다.
+      username: user.username
     };
 
     try {
@@ -28,11 +30,8 @@ const CreatePost = () => {
         },
       });
       console.log('Post created:', response.data);
-      // 성공적으로 게시물이 생성된 경우, 폼을 초기화합니다.
-      setTitle('');
-      setContent('');
-      setLocation('');
-      setCost('');
+      // 성공적으로 게시물이 생성된 경우, 홈 화면으로 이동합니다.
+      navigate('/');
     } catch (error) {
       console.error('Error creating post:', error);
     }
