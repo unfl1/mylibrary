@@ -1,10 +1,13 @@
 import Nav from '../components/Nav';
+import PostList from '../components/PostList'
 
 function Mainpage() {
     return(
         <div>
             <Nav />
-            <div>안녕하세요</div>
+            <div>
+                <PostList />
+            </div>
         </div>
     )
 }
