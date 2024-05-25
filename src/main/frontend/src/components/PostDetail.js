@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom'; // useNavigate 불러오기
+import { useParams, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux'; // 추가
 import API_BASE_URL from '../Config';
 
 const PostDetail = () => {
     const { postId } = useParams();
-    const navigate = useNavigate(); // useNavigate 사용
+    const navigate = useNavigate();
     const [post, setPost] = useState(null);
+    const currentUser = useSelector(state => state.user.user); // 현재 사용자 정보 가져오기
 
     useEffect(() => {
         fetchPost();
@@ -21,13 +23,27 @@ const PostDetail = () => {
         }
     };
 
+    const handleDeletePost = async () => {
+        try {
+            // 현재 사용자의 username과 게시물 작성자의 username 비교
+            if (currentUser && post && currentUser.username === post.username) {
+                await axios.delete(`${API_BASE_URL}/post/${postId}`, {
+                    params: {
+                        username: currentUser.username
+                    }
+                });
+                navigate('/'); // 삭제 후 홈페이지로 이동
+            } else {
+                console.error('You are not authorized to delete this post');
+            }
+        } catch (error) {
+            console.error('Error deleting post:', error);
+        }
+    };
+
     if (!post) {
         return <div className="text-center">Loading...</div>;
     }
-
-    const handleBack = () => {
-        navigate(-1); // 뒤로 가기
-    };
 
     return (
         <div className="max-w-4xl mx-auto my-8 p-4">
@@ -38,12 +54,11 @@ const PostDetail = () => {
             <div className="text-gray-600 mb-2"><strong>Author:</strong> {post.authorNickname}</div>
             <div className="text-gray-600 mb-2"><strong>Created at:</strong> {new Date(post.createdAt).toLocaleString()}</div>
             <div className="text-gray-600 mb-2"><strong>Views:</strong> {post.views}</div>
-            <button 
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
-                onClick={handleBack} // 뒤로 가기 버튼 클릭 시 handleBack 함수 호출
-            >
-                Back to Posts
-            </button>
+            {currentUser && currentUser.username === post.username ? ( // 수정 부분
+                <button onClick={handleDeletePost} className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 mt-4 rounded">
+                    Delete
+                </button>
+            ) : null} {/* 수정 부분 */}
         </div>
     );
 };
