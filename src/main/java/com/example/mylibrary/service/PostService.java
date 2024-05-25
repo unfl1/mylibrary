@@ -63,6 +63,7 @@ public class PostService {
         postDetailDto.setLocation(post.getLocation());
         postDetailDto.setCost(post.getCost());
         postDetailDto.setAuthorNickname(post.getAuthor().getNickname());
+        postDetailDto.setUsername(post.getAuthor().getUsername()); // 작성자의 username 설정
         postDetailDto.setCreatedAt(post.getCreatedAt());
         postDetailDto.setViews(post.getViews());
 
@@ -71,5 +72,18 @@ public class PostService {
         postRepository.save(post);
 
         return postDetailDto;
+    }
+
+    // 게시물 삭제
+    public void deletePost(Long postId, String username) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+
+        // 게시물 작성자와 요청한 사용자를 비교하여 인증합니다.
+        if (!post.getAuthor().getUsername().equals(username)) {
+            throw new IllegalArgumentException("You are not authorized to delete this post");
+        }
+
+        postRepository.delete(post);
     }
 }

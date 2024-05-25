@@ -14,4 +14,5 @@ public class PostDetailDto {
     private Date createdAt;
     private int views;
     private Long postId;
+    private String username;
 }

@@ -34,4 +34,11 @@ public class PostController {
         PostDetailDto postDetailDto = postService.getPostById(postId);
         return ResponseEntity.ok(postDetailDto);
     }
+
+    // 게시물 삭제
+    @DeleteMapping("/post/{postId}")
+    public ResponseEntity<String> deletePost(@PathVariable("postId") Long postId, @RequestParam("username") String username) {
+        postService.deletePost(postId, username);
+        return ResponseEntity.ok("Post deleted successfully");
+    }
 }
