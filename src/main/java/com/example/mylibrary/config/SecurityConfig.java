@@ -1,6 +1,5 @@
 package com.example.mylibrary.config;
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,7 +28,6 @@ public class SecurityConfig {
                         .invalidateHttpSession(true))
         ;
         return http.build();
-
     }
 
     //비밀번호 암호화 하기 위해 필요
