@@ -15,21 +15,21 @@ function Nav() {
 
     return (
         <div className="mb-5" >
-            <div className="max-w-screen-xl flex flex-wrap items-center p-4 gap-5 ml-20 mt-5 pl-10">
+            <div>
                 <Link to="/">
-          <span className="self-center text-3xl font-black whitespace-nowrap dark:text-white">
-            나만의 도서관
-          </span>
+                    <div className="flex justify-center text-3xl font-black whitespace-nowrap dark:text-white pt-10">
+                        나만의 도서관
+                    </div>
                 </Link>
             </div>
-            <div className="flex md:flex md:justify-between">
-                <ul className="hidden md:flex items-center space-x-1 gap-5 mr-20 pr-10">
+            <div className="flex items-center justify-end w-full pt-5">
+                <ul className="hidden md:flex items-center space-x-1 gap-5 mr-20 pr-24">
                     {isLoggedIn ? (
                         <>
                             <li>
-                <span className="text-blue-600 font-semibold text-lg">
-                  {user.nickname}
-                </span>
+                                <span className="text-blue-600 font-semibold text-lg">
+                                    {user.nickname}
+                                </span>
                                 님 안녕하세요!
                             </li>
                             <li>
@@ -41,12 +41,12 @@ function Nav() {
                     ) : (
                         <>
                             <li>
-                                <Link to="/Login" className="hover:text-purple-600">
+                                <Link to="/Login" className="hover:text-blue-600">
                                     로그인
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/SignUp" className="hover:text-purple-600">
+                                <Link to="/SignUp" className="hover:text-blue-600">
                                     회원가입
                                 </Link>
                             </li>
