@@ -17,7 +17,7 @@ public class PostController {
 
     private final PostService postService;
 
-    @PostMapping("/post/create")
+    @PostMapping("/post")
     public ResponseEntity<Post> createPost(@RequestBody PostCreateDto postCreateDto) {
         Post post = postService.createPost(postCreateDto);
         return ResponseEntity.ok(post);
@@ -35,7 +35,6 @@ public class PostController {
         return ResponseEntity.ok(postDetailDto);
     }
 
-    // 게시물 삭제
     @DeleteMapping("/post/{postId}")
     public ResponseEntity<String> deletePost(@PathVariable("postId") Long postId, @RequestParam("username") String username) {
         postService.deletePost(postId, username);
