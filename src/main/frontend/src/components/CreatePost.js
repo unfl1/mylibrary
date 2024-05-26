@@ -24,7 +24,7 @@ const CreatePost = () => {
     };
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/post/create`, postCreateDto, {
+      const response = await axios.post(`${API_BASE_URL}/post`, postCreateDto, {
         headers: {
           'Content-Type': 'application/json',
         },

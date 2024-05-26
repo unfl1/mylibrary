@@ -47,18 +47,20 @@ const PostDetail = () => {
 
     return (
         <div className="max-w-4xl mx-auto my-8 p-4">
-            <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
-            <p className="text-lg text-gray-800 mb-4">{post.content}</p>
-            <div className="text-gray-600 mb-2"><strong>Location:</strong> {post.location}</div>
-            <div className="text-gray-600 mb-2"><strong>Cost:</strong> {post.cost}</div>
-            <div className="text-gray-600 mb-2"><strong>Author:</strong> {post.authorNickname}</div>
-            <div className="text-gray-600 mb-2"><strong>Created at:</strong> {new Date(post.createdAt).toLocaleString()}</div>
-            <div className="text-gray-600 mb-2"><strong>Views:</strong> {post.views}</div>
-            {currentUser && currentUser.username === post.username ? ( // 수정 부분
-                <button onClick={handleDeletePost} className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 mt-4 rounded">
-                    Delete
-                </button>
-            ) : null} {/* 수정 부분 */}
+            <div>
+                <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
+                <p className="text-lg text-gray-800 mb-4">{post.content}</p>
+                <div className="text-gray-600 mb-2"><strong>Location:</strong> {post.location}</div>
+                <div className="text-gray-600 mb-2"><strong>Cost:</strong> {post.cost}</div>
+                <div className="text-gray-600 mb-2"><strong>Author:</strong> {post.authorNickname}</div>
+                <div className="text-gray-600 mb-2"><strong>Created at:</strong> {new Date(post.createdAt).toLocaleString()}</div>
+                <div className="text-gray-600 mb-2"><strong>Views:</strong> {post.views}</div>
+                {currentUser && currentUser.username === post.username ? ( // 수정 부분
+                    <button onClick={handleDeletePost} className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 mt-4 rounded">
+                        Delete
+                    </button>
+                ) : null} {/* 수정 부분 */}
+            </div>
         </div>
     );
 };
