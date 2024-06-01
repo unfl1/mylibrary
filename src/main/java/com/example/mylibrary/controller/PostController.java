@@ -6,9 +6,17 @@ import com.example.mylibrary.dto.PostDetailDto;
 import com.example.mylibrary.dto.PostListDto;
 import com.example.mylibrary.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -18,7 +26,8 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/post")
-    public ResponseEntity<Post> createPost(@RequestBody PostCreateDto postCreateDto) {
+    public ResponseEntity<Post> createPost(@ModelAttribute PostCreateDto postCreateDto, @RequestParam("image") MultipartFile image) {
+        postCreateDto.setImage(image);
         Post post = postService.createPost(postCreateDto);
         return ResponseEntity.ok(post);
     }
@@ -39,5 +48,19 @@ public class PostController {
     public ResponseEntity<String> deletePost(@PathVariable("postId") Long postId, @RequestParam("username") String username) {
         postService.deletePost(postId, username);
         return ResponseEntity.ok("Post deleted successfully");
+    }
+
+    // 이미지 제공
+    @GetMapping("/images/{filename}")
+    public ResponseEntity<byte[]> getImage(@PathVariable("filename") String filename) {
+        try {
+            Path imagePath = Paths.get("uploads/", filename);  // `uploadPath`를 사용하도록 수정
+            byte[] imageBytes = Files.readAllBytes(imagePath);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG); // 파일 타입에 맞게 설정
+            return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

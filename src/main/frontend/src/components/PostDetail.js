@@ -55,11 +55,16 @@ const PostDetail = () => {
                 <div className="text-gray-600 mb-2"><strong>Author:</strong> {post.authorNickname}</div>
                 <div className="text-gray-600 mb-2"><strong>Created at:</strong> {new Date(post.createdAt).toLocaleString()}</div>
                 <div className="text-gray-600 mb-2"><strong>Views:</strong> {post.views}</div>
-                {currentUser && currentUser.username === post.username ? ( // 수정 부분
+                {post.imageUrl && (
+                    <div className="mb-4">
+                        <img src={`${API_BASE_URL}${post.imageUrl}`} alt="why" className="w-full h-auto" />
+                    </div>
+                )}
+                {currentUser && currentUser.username === post.username ? (
                     <button onClick={handleDeletePost} className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 mt-4 rounded">
                         Delete
                     </button>
-                ) : null} {/* 수정 부분 */}
+                ) : null}
             </div>
         </div>
     );

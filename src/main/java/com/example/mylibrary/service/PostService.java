@@ -1,16 +1,25 @@
 package com.example.mylibrary.service;
 
+import com.example.mylibrary.domain.Image;
 import com.example.mylibrary.domain.Post;
 import com.example.mylibrary.domain.SiteUser;
 import com.example.mylibrary.dto.PostCreateDto;
 import com.example.mylibrary.dto.PostDetailDto;
 import com.example.mylibrary.dto.PostListDto;
+import com.example.mylibrary.repository.ImageRepository;
 import com.example.mylibrary.repository.PostRepository;
 import com.example.mylibrary.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +30,14 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final ImageRepository imageRepository;
 
+    // 이미지 저장 경로
+    @Value("${upload.path}")
+    private String uploadPath;
+
+    //post 생성
+    @Transactional
     public Post createPost(PostCreateDto postCreateDto) {
         // 요청에서 사용자 이름을 받아서 해당 사용자를 찾습니다.
         SiteUser author = userRepository.findByUsername(postCreateDto.getUsername())
@@ -36,10 +52,42 @@ public class PostService {
         post.setCreatedAt(new Date());
         post.setViews(0);
 
+        // 이미지 저장 및 Image 엔티티 생성
+        MultipartFile imageFile = postCreateDto.getImage();
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                String fileName = saveImage(imageFile);
+                Image image = new Image();
+                image.setUrl(fileName);
+                image.setPost(post);
+                imageRepository.save(image);
+                post.setImage(image);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to save image", e);
+            }
+        }
+
         return postRepository.save(post);
     }
 
-    // 모든 게시물 조회
+    // 이미지 저장 메소드
+    private String saveImage(MultipartFile imageFile) throws IOException {
+        String fileName = imageFile.getOriginalFilename();
+        Path imagePath = Paths.get(uploadPath);
+
+        // 디렉토리가 존재하지 않으면 생성합니다.
+        if (!Files.exists(imagePath)) {
+            Files.createDirectories(imagePath);
+        }
+
+        Path filePath = imagePath.resolve(fileName);
+        Files.write(filePath, imageFile.getBytes());
+
+        // 이미지 URL 구성
+        return "/images/" + fileName;
+    }
+
+    // 모든 post 조회
     public List<PostListDto> getAllPosts() {
         return postRepository.findAll().stream().map(post -> {
             PostListDto postResponseDto = new PostListDto();
@@ -52,22 +100,27 @@ public class PostService {
         }).collect(Collectors.toList());
     }
 
+    //상세보기
     public PostDetailDto getPostById(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post not found"));
 
         PostDetailDto postDetailDto = new PostDetailDto();
-        postDetailDto.setPostId(post.getId());  // postId를 설정합니다.
+        postDetailDto.setPostId(post.getId());
         postDetailDto.setTitle(post.getTitle());
         postDetailDto.setContent(post.getContent());
         postDetailDto.setLocation(post.getLocation());
         postDetailDto.setCost(post.getCost());
         postDetailDto.setAuthorNickname(post.getAuthor().getNickname());
-        postDetailDto.setUsername(post.getAuthor().getUsername()); // 작성자의 username 설정
+        postDetailDto.setUsername(post.getAuthor().getUsername());
         postDetailDto.setCreatedAt(post.getCreatedAt());
         postDetailDto.setViews(post.getViews());
 
-        // 조회수 증가 로직 추가
+        // 이미지 URL 설정
+        if (post.getImage() != null) {
+            postDetailDto.setImageUrl(post.getImage().getUrl());
+        }
+
         post.setViews(post.getViews() + 1);
         postRepository.save(post);
 

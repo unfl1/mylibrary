@@ -15,4 +15,5 @@ public class PostDetailDto {
     private int views;
     private Long postId;
     private String username;
+    private String imageUrl;
 }
