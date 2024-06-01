@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 
-const CommentForm = ({ postId, username, onCommentSubmit }) => {
+const CommentForm = ({ postId, onCommentSubmit }) => {
   const [content, setContent] = useState('');
+  const username = useSelector(state => state.user.user.username); // Redux store에서 username 가져오기
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -13,6 +14,7 @@ const CommentForm = ({ postId, username, onCommentSubmit }) => {
     };
     onCommentSubmit(commentData);
     setContent('');
+    window.location.reload(); // 페이지 새로고침
   };
 
   return (
