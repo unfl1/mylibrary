@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +24,7 @@ public class CommentService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
+    //댓글 생성
     public Comment createComment(CommentCreateDto commentCreateDto) {
         Post post = postRepository.findById(commentCreateDto.getPostId()).orElseThrow(() -> new IllegalArgumentException("Post not found"));
         SiteUser user = userRepository.findByUsername(commentCreateDto.getUsername()).orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -42,6 +44,7 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
+    //댓글 목록, 대댓글 위해 계층 구조 만들기
     public List<CommentDto> getCommentsByPostId(Long postId) {
         List<Comment> comments = commentRepository.findByPostId(postId);
         List<CommentDto> commentDTOs = comments.stream()
@@ -83,5 +86,18 @@ public class CommentService {
             }
         });
         return rootComments;
+    }
+
+    //댓글 삭제
+    public boolean deleteComment(Long commentId, String username) {
+        Optional<Comment> optionalComment = commentRepository.findById(commentId);
+        if (optionalComment.isPresent()) {
+            Comment comment = optionalComment.get();
+            if (comment.getUser().getUsername().equals(username)) {
+                commentRepository.delete(comment);
+                return true;
+            }
+        }
+        return false;
     }
 }

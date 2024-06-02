@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 
-const CommentForm = ({ postId , parentId,  onCommentSubmit }) => {
+const CommentForm = ({ postId, parentId, onCommentSubmit }) => {
   const [content, setContent] = useState('');
   const username = useSelector(state => state.user.user.username); // Redux store에서 username 가져오기
 
@@ -15,7 +15,7 @@ const CommentForm = ({ postId , parentId,  onCommentSubmit }) => {
     };
     onCommentSubmit(commentData);
     setContent('');
-    window.location.reload(); // 페이지 새로고침
+    window.location.reload();
   };
 
   return (
@@ -28,7 +28,7 @@ const CommentForm = ({ postId , parentId,  onCommentSubmit }) => {
           className="p-2 border border-gray-300 rounded w-full"
         />
       </div>
-      <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
+      <button type="submit" className="px-4 py-2 text-black bg-transparent rounded hover:text-blue-500">
         Submit
       </button>
     </form>

@@ -26,4 +26,15 @@ public class CommentController {
         List<CommentDto> commentDtos = commentService.getCommentsByPostId(postId);
         return ResponseEntity.ok(commentDtos);
     }
+
+    @DeleteMapping("/comment/{commentId}")
+    public ResponseEntity<String> deleteComment(@PathVariable("commentId") Long commentId,
+                                                @RequestHeader("username") String username) {
+        boolean deleted = commentService.deleteComment(commentId, username);
+        if (deleted) {
+            return new ResponseEntity<>("Comment deleted successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Failed to delete comment", HttpStatus.BAD_REQUEST);
+        }
+    }
 }
