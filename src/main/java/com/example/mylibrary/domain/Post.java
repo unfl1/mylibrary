@@ -25,6 +25,8 @@ public class Post {
 
     private int cost;
 
+    private int deposit;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 

@@ -49,6 +49,7 @@ public class PostService {
         post.setContent(postCreateDto.getContent());
         post.setLocation(postCreateDto.getLocation());
         post.setCost(postCreateDto.getCost());
+        post.setDeposit(postCreateDto.getDeposit());
         post.setAuthor(author);
         post.setCreatedAt(new Date());
         post.setViews(0);
@@ -118,6 +119,7 @@ public class PostService {
         postDetailDto.setContent(post.getContent());
         postDetailDto.setLocation(post.getLocation());
         postDetailDto.setCost(post.getCost());
+        postDetailDto.setDeposit(post.getDeposit());
         postDetailDto.setAuthorNickname(post.getAuthor().getNickname());
         postDetailDto.setUsername(post.getAuthor().getUsername());
         postDetailDto.setCreatedAt(post.getCreatedAt());

@@ -63,7 +63,7 @@ const PostList = () => {
                         onClick={handleGoToMyPosts}
                         className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-300"
                     >
-                        My Posts
+                        내 책
                     </button>
                 </div>
             </div>

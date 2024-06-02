@@ -11,22 +11,25 @@ const CreatePost = () => {
   const [content, setContent] = useState('');
   const [location, setLocation] = useState('');
   const [cost, setCost] = useState('');
+  const [deposit, setDeposit] = useState('');
+  const [image, setImage] = useState(null); // 이미지 파일 상태 추가
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const postCreateDto = {
-      title,
-      content,
-      location,
-      cost: parseInt(cost, 10),
-      username: user.username
-    };
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('content', content);
+    formData.append('location', location);
+    formData.append('cost', parseInt(cost, 10));
+    formData.append('deposit', parseInt(deposit, 10));
+    formData.append('username', user.username);
+    formData.append('image', image); // 이미지 파일 추가
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/post`, postCreateDto, {
+      const response = await axios.post(`${API_BASE_URL}/post`, formData, {
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'multipart/form-data',
         },
       });
       console.log('Post created:', response.data);
@@ -88,6 +91,31 @@ const CreatePost = () => {
             type="number"
             value={cost}
             onChange={(e) => setCost(e.target.value)}
+            className="w-full px-3 py-2 border rounded-lg"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="deposit">
+            Deposit
+          </label>
+          <input
+            id="deposit"
+            type="number"
+            value={deposit}
+            onChange={(e) => setDeposit(e.target.value)} // 수정된 부분
+            className="w-full px-3 py-2 border rounded-lg"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="image">
+            Image
+          </label>
+          <input
+            id="image"
+            type="file"
+            onChange={(e) => setImage(e.target.files[0])}
             className="w-full px-3 py-2 border rounded-lg"
             required
           />

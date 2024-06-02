@@ -9,6 +9,7 @@ public class PostCreateDto {
     private String content;
     private String location;
     private int cost;
+    private int deposit;
     private String username; // 사용자 이름을 추가합니다.
     private MultipartFile image;
 }
