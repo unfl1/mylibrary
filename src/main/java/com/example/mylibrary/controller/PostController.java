@@ -1,6 +1,7 @@
 package com.example.mylibrary.controller;
 
 import com.example.mylibrary.domain.Post;
+import com.example.mylibrary.dto.MyPostListDto;
 import com.example.mylibrary.dto.PostCreateDto;
 import com.example.mylibrary.dto.PostDetailDto;
 import com.example.mylibrary.dto.PostListDto;
@@ -72,5 +73,11 @@ public class PostController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(searchResults, HttpStatus.OK);
+    }
+
+    @GetMapping("/post/mypost/{username}")
+    public ResponseEntity<List<MyPostListDto>> getMyPosts(@PathVariable("username") String username) {
+        List<MyPostListDto> myPosts = postService.getMyPosts(username);
+        return ResponseEntity.ok(myPosts);
     }
 }

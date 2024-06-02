@@ -3,6 +3,7 @@ package com.example.mylibrary.service;
 import com.example.mylibrary.domain.Image;
 import com.example.mylibrary.domain.Post;
 import com.example.mylibrary.domain.SiteUser;
+import com.example.mylibrary.dto.MyPostListDto;
 import com.example.mylibrary.dto.PostCreateDto;
 import com.example.mylibrary.dto.PostDetailDto;
 import com.example.mylibrary.dto.PostListDto;
@@ -162,6 +163,26 @@ public class PostService {
             }
 
             return postResponseDto;
+        }).collect(Collectors.toList());
+    }
+
+    // 내가 작성한 모든 post 조회
+    public List<MyPostListDto> getMyPosts(String username) {
+        SiteUser author = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return postRepository.findByAuthor(author).stream().map(post -> {
+            MyPostListDto myPostListDto = new MyPostListDto();
+            myPostListDto.setPostId(post.getId());
+            myPostListDto.setTitle(post.getTitle());
+            myPostListDto.setLocation(post.getLocation());
+            myPostListDto.setCost(post.getCost());
+            myPostListDto.setAuthorUsername(post.getAuthor().getUsername());
+
+            if (post.getImage() != null) {
+                myPostListDto.setImageUrl(post.getImage().getUrl());
+            }
+
+            return myPostListDto;
         }).collect(Collectors.toList());
     }
 }
