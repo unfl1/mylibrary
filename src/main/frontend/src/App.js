@@ -5,6 +5,7 @@ import CreatePostPage from './pages/CreatePostPage';
 import PostDetailPage from './pages/PostDetailPage';
 import MyPostPage from './pages/MyPostPage'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import ProtectedRoute from './components/ProtectedRoute';
 import { Provider } from 'react-redux';
 import { store, persistor } from './redux/Store';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -21,8 +22,16 @@ function App() {
             <Route path="Login" element={<Login />} />
             <Route path="SignUp" element={<SignUp />} />
             <Route path="post/:postId" element={<PostDetailPage />} />
-            <Route path="CreatePostPage" element={<CreatePostPage />}/>
-            <Route path="MyPostPage" element={<MyPostPage />} />
+            <Route path="CreatePostPage" element={
+              <ProtectedRoute>
+                <CreatePostPage />
+              </ProtectedRoute>
+            } />
+            <Route path="MyPostPage" element={
+              <ProtectedRoute>
+                <MyPostPage />
+              </ProtectedRoute>
+            } />
           </Routes>
         </BrowserRouter>
       </PersistGate>
