@@ -145,4 +145,23 @@ public class PostService {
 
         postRepository.delete(post);
     }
+
+    // 제목으로 포스트 검색
+    public List<PostListDto> searchPostsByTitle(String title) {
+        return postRepository.findByTitleContainingIgnoreCase(title).stream().map(post -> {
+            PostListDto postResponseDto = new PostListDto();
+            postResponseDto.setPostId(post.getId()); // postId 설정
+            postResponseDto.setTitle(post.getTitle());
+            postResponseDto.setLocation(post.getLocation());
+            postResponseDto.setCost(post.getCost());
+            postResponseDto.setAuthorNickname(post.getAuthor().getNickname());
+
+            // 이미지 URL 설정
+            if (post.getImage() != null) {
+                postResponseDto.setImageUrl(post.getImage().getUrl());
+            }
+
+            return postResponseDto;
+        }).collect(Collectors.toList());
+    }
 }

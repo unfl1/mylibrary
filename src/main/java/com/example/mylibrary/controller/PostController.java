@@ -63,4 +63,14 @@ public class PostController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    // 제목으로 포스트 검색 API
+    @GetMapping("/post/search")
+    public ResponseEntity<List<PostListDto>> searchPostsByTitle(@RequestParam("title") String title) {
+        List<PostListDto> searchResults = postService.searchPostsByTitle(title);
+        if (searchResults.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(searchResults, HttpStatus.OK);
+    }
 }
