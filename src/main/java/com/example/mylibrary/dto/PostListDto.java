@@ -9,4 +9,5 @@ public class PostListDto {
     private int cost;
     private String authorNickname;
     private Long postId;
+    private String imageUrl;
 }

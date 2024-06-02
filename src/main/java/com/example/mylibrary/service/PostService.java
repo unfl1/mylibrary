@@ -96,6 +96,12 @@ public class PostService {
             postResponseDto.setLocation(post.getLocation());
             postResponseDto.setCost(post.getCost());
             postResponseDto.setAuthorNickname(post.getAuthor().getNickname());
+
+            // 이미지 URL 설정
+            if (post.getImage() != null) {
+                postResponseDto.setImageUrl(post.getImage().getUrl());
+            }
+
             return postResponseDto;
         }).collect(Collectors.toList());
     }
