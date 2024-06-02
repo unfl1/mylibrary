@@ -3,6 +3,7 @@ package com.example.mylibrary.dto;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class CommentDto {
@@ -13,4 +14,5 @@ public class CommentDto {
     private String username;
     private Long parentCommentId;
     private String nickname;
+    private List<CommentDto> replies;
 }

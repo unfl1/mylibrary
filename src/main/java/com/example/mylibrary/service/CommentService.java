@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,21 +44,44 @@ public class CommentService {
 
     public List<CommentDto> getCommentsByPostId(Long postId) {
         List<Comment> comments = commentRepository.findByPostId(postId);
-        List<CommentDto> commentDTOs = new ArrayList<>();
+        List<CommentDto> commentDTOs = comments.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
 
-        for (Comment comment : comments) {
-            CommentDto commentDto = new CommentDto();
-            commentDto.setId(comment.getId());
-            commentDto.setContent(comment.getContent());
-            commentDto.setCreatedAt(comment.getCreatedAt());
-            commentDto.setPostId(comment.getPost().getId());
-            commentDto.setUsername(comment.getUser().getUsername());
-            commentDto.setParentCommentId(comment.getParentComment() != null ? comment.getParentComment().getId() : null);
-            commentDto.setNickname(comment.getUser().getNickname());
+        return buildCommentHierarchy(commentDTOs);
+    }
 
-            commentDTOs.add(commentDto);
-        }
+    private CommentDto mapToDto(Comment comment) {
+        CommentDto commentDto = new CommentDto();
+        commentDto.setId(comment.getId());
+        commentDto.setContent(comment.getContent());
+        commentDto.setCreatedAt(comment.getCreatedAt());
+        commentDto.setPostId(comment.getPost().getId());
+        commentDto.setUsername(comment.getUser().getUsername());
+        commentDto.setParentCommentId(comment.getParentComment() != null ? comment.getParentComment().getId() : null);
+        commentDto.setNickname(comment.getUser().getNickname());
 
-        return commentDTOs;
+        return commentDto;
+    }
+
+    private List<CommentDto> buildCommentHierarchy(List<CommentDto> comments) {
+        List<CommentDto> rootComments = new ArrayList<>();
+        comments.forEach(comment -> {
+            if (comment.getParentCommentId() == null) {
+                rootComments.add(comment);
+            } else {
+                CommentDto parentComment = comments.stream()
+                        .filter(c -> c.getId().equals(comment.getParentCommentId()))
+                        .findFirst()
+                        .orElse(null);
+                if (parentComment != null) {
+                    if (parentComment.getReplies() == null) {
+                        parentComment.setReplies(new ArrayList<>());
+                    }
+                    parentComment.getReplies().add(comment);
+                }
+            }
+        });
+        return rootComments;
     }
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 
-const CommentForm = ({ postId, onCommentSubmit }) => {
+const CommentForm = ({ postId , parentId,  onCommentSubmit }) => {
   const [content, setContent] = useState('');
   const username = useSelector(state => state.user.user.username); // Redux store에서 username 가져오기
 
@@ -10,7 +10,8 @@ const CommentForm = ({ postId, onCommentSubmit }) => {
     const commentData = {
       content,
       postId,
-      username
+      username,
+      parentCommentId: parentId || null,
     };
     onCommentSubmit(commentData);
     setContent('');

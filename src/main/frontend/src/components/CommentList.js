@@ -26,14 +26,14 @@ const CommentList = ({ postId }) => {
       });
   };
 
-  const handleReplySubmit = (parentId, replyData) => {
-    axios.post(`${API_BASE_URL}/post/${postId}/comment/${parentId}/reply`, replyData)
+  const handleReplySubmit = (replyData, parentId) => {
+    axios.post(`${API_BASE_URL}/post/${postId}/comment`, replyData)
       .then(response => {
         const updatedComments = comments.map(comment => {
           if (comment.id === parentId) {
             return {
               ...comment,
-              replies: [...comment.replies, response.data]
+              replies: [...(comment.replies || []), response.data]
             };
           }
           return comment;
@@ -54,7 +54,11 @@ const CommentList = ({ postId }) => {
           <div>{comment.content}</div>
           <div className="text-sm text-gray-500">{new Date(comment.createdAt).toLocaleString()}</div>
           {/* 대댓글 폼 */}
-          <CommentForm postId={postId} parentId={comment.id} onCommentSubmit={handleReplySubmit} />
+          <CommentForm 
+            postId={postId} 
+            parentId={comment.id} 
+            onCommentSubmit={(replyData) => handleReplySubmit(replyData, comment.id)} 
+          />
           {/* 대댓글 리스트 */}
           {comment.replies && comment.replies.map(reply => (
             <div key={reply.id} className="p-2 bg-gray-100 border border-gray-300 rounded ml-4 mt-2">
