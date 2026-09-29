@@ -23,7 +23,7 @@
 | 배포 단위 | 이미지에 구성한 실행 환경 | 구현 근거 |
 | --- | --- | --- |
 | 프론트엔드 | Node.js 환경에서 React를 빌드하고 `serve`로 정적 파일 제공 | [프론트엔드 Dockerfile](https://github.com/unfl1/mylibraryfront/blob/master/Dockerfile) |
-| 백엔드 | 빌드한 JAR을 이미지에 포함하고 Java 17로 실행 | [백엔드 Dockerfile](./Dockerfile) |
+| 백엔드 | 빌드한 JAR을 이미지에 포함하고 Java 17로 실행 | [백엔드 Dockerfile](https://github.com/unfl1/mylibraryback/blob/master/Dockerfile) |
 
 환경 전환 시에는 DB 연결, 외부 API 접근, 이미지 파일 저장 위치를 배포 환경에 맞게 조정했습니다. 로컬 프로세스끼리 연결하던 구성을 컨테이너 실행 위치와 접근 경로에 맞춰 옮겼습니다.
 
@@ -41,4 +41,4 @@
 
 실습 대상인 **나만의 도서관**은 개인 소유 도서의 대여 정보를 공유하는 서비스입니다. React, Spring Boot, MariaDB로 구성했으며, 도서 등록과 검색, 이미지 첨부, 댓글 기능을 제공합니다.
 
-[로컬 개발 버전](https://github.com/unfl1/mylibrary) / [백엔드](https://github.com/unfl1/mylibraryback) / [프론트엔드](https://github.com/unfl1/mylibraryfront)
+[클라우드 배포 버전](https://github.com/unfl1/mylibrary) / [백엔드](https://github.com/unfl1/mylibraryback) / [프론트엔드](https://github.com/unfl1/mylibraryfront)
