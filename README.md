@@ -1,6 +1,6 @@
 # 나만의 도서관
 
-**Docker·Kubernetes 기반 클라우드 배포 및 운영**
+**Docker와 Kubernetes 기반 클라우드 배포 및 운영**
 
 - 담당 역할: 프론트엔드 및 백엔드 개발, 클라우드 배포 환경 구축, Jenkins 빌드 자동화
 - 기술: React, Java, Spring Boot, Spring Data JPA, MariaDB, Docker, Kubernetes, Jenkins, k6, Grafana
