@@ -48,7 +48,7 @@
 
 #### 구성
 
-![로컬 개발, GitHub, Jenkins, Kubernetes로 이어지는 배포 흐름](assets/delivery-flow.svg)
+![로컬 개발, GitHub, Jenkins, Kubernetes로 이어지는 배포 흐름](assets/delivery-flow.png)
 
 #### 구축 과정
 
@@ -64,7 +64,7 @@
 
 #### 수행 구성
 
-![k6, 서버, Grafana를 활용한 부하 테스트와 모니터링](assets/load-monitoring.svg)
+![k6, 서버, Grafana를 활용한 부하 테스트와 모니터링](assets/load-monitoring.png)
 
 | 도구 | 수행 내용 |
 | --- | --- |
