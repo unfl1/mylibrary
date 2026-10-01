@@ -22,62 +22,48 @@
 
 ### 1. 프론트엔드 및 백엔드 컨테이너화와 Kubernetes 배포
 
-#### 구성
+#### 전체적인 아키텍처
 
-![React, Spring Boot, MariaDB의 Docker 컨테이너를 Kubernetes로 관리하는 구조](assets/service-containers.png)
-
-| 배포 대상 | 이미지 구성 | 실행 방식 |
-| --- | --- | --- |
-| 프론트엔드 | Node.js 20.12.2 기반, 의존성 설치 후 React 빌드 | `serve -s build`로 정적 파일 제공, 포트 3000 |
-| 백엔드 | OpenJDK 17 기반, 빌드된 JAR을 `/app/app.jar`로 복사 | `java -jar app.jar`로 실행, 포트 8080 |
+[![React, Spring Boot, MariaDB의 Docker 컨테이너를 Kubernetes로 관리하는 구조](assets/service-containers.png)](assets/service-containers.png)
 
 #### 구축 과정
 
-- 프론트엔드와 백엔드 저장소 분리 및 개별 Dockerfile 작성
-- 프론트엔드 이미지 빌드 시 `npm install`과 `npm run build` 실행, `serve`를 통한 빌드 결과물 제공
-- 백엔드 이미지에 `build/libs`의 JAR 포함 및 Java 17 실행 환경 구성
-- 생성한 Docker 이미지를 사용한 클라우드 Kubernetes 환경 배포
-- 배포 환경에 맞게 DB 연결, 외부 API 접근, 이미지 파일 저장 위치 조정
+- 서비스별 실행 환경을 관리하도록 프론트엔드와 백엔드 저장소를 분리하고 각각 Dockerfile 작성.
+- 프론트엔드는 이미지 빌드 중 React를 빌드해 `serve`로 제공하고, 백엔드는 빌드된 JAR을 포함해 Java 17 환경에서 실행.
+- 생성한 이미지로 클라우드 Kubernetes 환경에 배포하고, 배포 환경에 맞게 DB 연결과 외부 API 접근, 이미지 저장 위치 조정.
 
 #### 결과
 
-- 프론트엔드와 백엔드 컨테이너의 Kubernetes 환경 실행
-- Dockerfile을 통한 서비스별 실행 환경과 시작 명령 관리
+- 프론트엔드와 백엔드 컨테이너를 클라우드 Kubernetes 환경에서 실행.
+- 서비스별 실행 환경과 시작 명령을 Dockerfile로 관리.
 
 ### 2. GitHub Webhook과 Jenkins 연동 및 빌드 자동화
 
-#### 구성
+#### 전체적인 아키텍처
 
-![로컬 개발, GitHub, Jenkins, Kubernetes로 이어지는 배포 흐름](assets/delivery-flow.png)
+[![로컬 개발, GitHub, Jenkins, Kubernetes로 이어지는 배포 흐름](assets/delivery-flow.png)](assets/delivery-flow.png)
 
 #### 구축 과정
 
-- 클라우드 서버에 Jenkins 설치 및 GitHub 저장소 Webhook 연동
-- 코드 push 시 Jenkins 빌드 자동 실행 설정
-- Jenkins 빌드 실행 결과 확인
+- 코드 변경을 빌드에 연결하도록 클라우드 서버에 Jenkins를 설치하고 GitHub 저장소의 Webhook 연동.
+- 저장소에 코드를 push하면 Jenkins 빌드가 자동으로 시작되도록 설정하고 실행 결과 확인.
 
 #### 결과
 
-- GitHub 코드 변경 감지부터 Jenkins 빌드 실행까지 자동화
+- GitHub에 push한 코드의 변경 감지부터 Jenkins 빌드 실행까지 자동화해, 빌드를 수동으로 시작하는 과정 대체.
 
 ### 3. k6 부하 테스트와 수동 Pod 확장
 
-#### 수행 구성
+#### 전체적인 아키텍처
 
-![k6, 서버, Grafana를 활용한 부하 테스트와 모니터링](assets/load-monitoring.png)
-
-| 도구 | 수행 내용 |
-| --- | --- |
-| k6 | 배포된 서비스에 HTTP 요청을 보내 부하 발생 |
-| Kubernetes | Pod 수를 수동으로 늘리는 스케일 아웃 수행 |
-| Grafana | 대시보드에서 배포 환경의 상태 확인 |
+[![k6, 서버, Grafana를 활용한 부하 테스트와 모니터링](assets/load-monitoring.png)](assets/load-monitoring.png)
 
 #### 수행 과정
 
-- Kubernetes에 배포한 서비스를 대상으로 k6 부하 테스트 수행
-- 부하 테스트 과정에서 Pod 수 수동 증설 및 서비스 실행 규모 조정
-- Grafana 대시보드를 통한 배포 환경 상태 확인
+- Kubernetes에 배포한 서비스를 대상으로 k6에서 HTTP 요청을 보내 부하 테스트 수행.
+- 부하 테스트 과정에서 Pod 수를 수동으로 늘려 서비스 실행 규모를 조정하는 스케일 아웃 수행.
+- Grafana 대시보드에서 배포 환경의 상태를 확인하며 테스트와 Pod 확장 과정 관찰.
 
-#### 수행 결과
+#### 결과
 
-- 클라우드 서비스 부하 테스트 및 Kubernetes 수동 스케일 아웃 수행
+- 배포된 서비스에 부하를 발생시키고 Pod를 수동 증설하는 과정을 통해, Kubernetes 실행 규모 조정과 상태 모니터링 경험 확보.
