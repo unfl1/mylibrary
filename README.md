@@ -1,69 +1,99 @@
 # 나만의 도서관
 
-**Docker와 Kubernetes 기반 클라우드 배포 및 운영**
+**도서 공유 서비스를 개발하고 Docker와 Kubernetes로 배포한 프로젝트**
 
-- 담당 역할: 프론트엔드 및 백엔드 개발, 클라우드 배포 환경 구축, Jenkins 빌드 자동화
-- 기술: React, Java, Spring Boot, Spring Data JPA, MariaDB, Docker, Kubernetes, Jenkins, k6, Grafana
-- GitHub: [백엔드](https://github.com/unfl1/mylibraryback) / [프론트엔드](https://github.com/unfl1/mylibraryfront) / [클라우드 배포 버전](https://github.com/unfl1/mylibrary)
+사용자가 가진 책을 대여 게시글로 등록하고, 다른 사용자가 목록과 상세 내용을 살펴볼 수 있는 도서 공유 서비스입니다. 제목 검색, 게시글 이미지 첨부, 댓글, 본인 게시글 관리와 회원가입 및 로그인 기능을 제공합니다.
+
+React 프론트엔드와 Spring Boot 백엔드를 직접 개발하고, 이 서비스를 대상으로 컨테이너 구성과 클라우드 배포를 실습했습니다. GitHub와 Jenkins를 연결한 빌드 자동화, k6 부하 테스트, Kubernetes Pod의 수동 확장과 Grafana 상태 확인도 수행했습니다.
+
+이 저장소에는 Spring Boot 백엔드와 `src/main/frontend`의 React 프론트엔드가 함께 들어 있습니다.
+
+## 주요 기능
+
+| 기능 | 설명 |
+| --- | --- |
+| 도서 공유 게시글 | 대여할 책의 게시글 등록, 목록 조회, 상세 내용 확인 |
+| 도서 검색 | 제목으로 게시글을 검색해 관심 있는 책 확인 |
+| 본인 게시글 관리 | 내가 등록한 게시글을 모아 보고 삭제 |
+| 이미지 첨부 | 게시글에 도서 이미지를 첨부하고 상세 화면에서 조회 |
+| 댓글 | 게시글에 댓글 작성과 조회 |
+| 회원 관리 | 회원가입과 로그인 |
+
+## 담당 역할
+
+**강현준: 프론트엔드와 백엔드 개발, 배포 환경 구축**
+
+- React로 도서 목록과 상세 화면, 게시글 작성, 이미지와 댓글 화면 개발
+- Spring Boot와 JPA로 회원, 게시글, 이미지 및 댓글 API 구현
+- 프론트엔드와 백엔드의 실행 환경을 Docker 이미지로 구성
+- 클라우드 Kubernetes 환경에서 서비스를 실행하고 DB 연결과 이미지 저장 위치 조정
+- GitHub Webhook과 Jenkins를 연동해 코드 변경 시 빌드가 실행되도록 설정
+- k6로 HTTP 부하를 발생시키고 Pod를 수동으로 늘리며 Grafana에서 상태 확인
+
+## 기술
+
+- JavaScript, React, Axios, Tailwind CSS
+- Java 17, Spring Boot 3.2.5, Spring Data JPA, Spring Security
+- MariaDB
+- Docker, Kubernetes, Jenkins
+- k6, Grafana
 
 ## 시스템 구조
 
-![GitHub와 Jenkins, Kubernetes 컨테이너 배포 환경, k6와 Grafana를 연결한 전체 시스템 구조](assets/system-overview.png)
+[![나만의 도서관 시스템 구조와 배포 환경](assets/system-overview.png)](assets/system-overview.png)
 
-## 핵심 기능
+- React에서 도서 공유 화면을 제공하고 Spring Boot API와 통신
+- Spring Boot에서 회원, 게시글, 이미지와 댓글을 처리하고 MariaDB에 데이터 저장
+- 프론트엔드와 백엔드 및 DB를 컨테이너로 구성해 Kubernetes 환경에서 실행
+- GitHub의 코드 변경을 Webhook으로 Jenkins에 전달해 빌드 실행
+- k6로 서비스에 HTTP 부하를 발생시키고 Grafana에서 배포 환경 상태 확인
 
-- 도서 공유 - 도서 대여 게시글 등록, 목록 및 상세 조회, 제목 검색, 본인 게시글 조회와 삭제
-- 이미지 및 댓글 - 게시글 이미지 첨부와 조회, 댓글 기능
-- 회원 - 회원가입과 로그인
+구조도는 프로젝트에서 실습한 전체 개발 및 배포 환경을 보여줍니다. 클라우드 실행 환경과 Jenkins 설정은 별도로 구성했으며, 아래는 이 저장소의 코드를 로컬에서 실행하는 방법입니다.
 
-직접 개발한 서비스를 대상으로 Docker 이미지 구성, Kubernetes 배포 환경 구축, Jenkins 빌드 자동화, k6 부하 테스트 및 수동 Pod 확장 수행
+## 저장소 구성
 
-## 배포 환경 구축
+```text
+assets/                       시스템 구조 이미지
+src/main/
+  java/                       Spring Boot 백엔드
+  resources/                  DB 연결 등 애플리케이션 설정
+  frontend/                   React 프론트엔드
+src/test/                     백엔드 테스트
+```
 
-### 1. 프론트엔드 및 백엔드 컨테이너화와 Kubernetes 배포
+## 로컬 실행
 
-#### 전체적인 아키텍처
+Java 17, MariaDB, Node.js와 npm이 필요합니다.
 
-[![React, Spring Boot, MariaDB의 Docker 컨테이너를 Kubernetes로 관리하는 구조](assets/service-containers.png)](assets/service-containers.png)
+### 백엔드
 
-#### 구축 과정
+사용할 MariaDB 데이터베이스와 계정을 준비한 뒤 `src/main/resources/application.properties`의 DB 연결 정보를 실행 환경에 맞게 설정합니다. 이미지 저장에 사용하는 `upload.path`와 코드의 `uploads/` 경로도 확인해 주세요.
 
-- 서비스별 실행 환경을 관리하도록 프론트엔드와 백엔드 저장소를 분리하고 각각 Dockerfile 작성.
-- 프론트엔드는 이미지 빌드 중 React를 빌드해 `serve`로 제공하고, 백엔드는 빌드된 JAR을 포함해 Java 17 환경에서 실행.
-- 생성한 이미지로 클라우드 Kubernetes 환경에 배포하고, 배포 환경에 맞게 DB 연결과 외부 API 접근, 이미지 저장 위치 조정.
+저장소 최상위에서 실행합니다.
 
-#### 결과
+```bash
+./gradlew bootRun
+```
 
-- 프론트엔드와 백엔드 컨테이너를 클라우드 Kubernetes 환경에서 실행.
-- 서비스별 실행 환경과 시작 명령을 Dockerfile로 관리.
+Windows에서는 `./gradlew` 대신 `gradlew.bat`을 사용합니다. 별도 포트 설정이 없으면 백엔드는 `http://localhost:8080`에서 실행됩니다.
 
-### 2. GitHub Webhook과 Jenkins 연동 및 빌드 자동화
+### 프론트엔드
 
-#### 전체적인 아키텍처
+다른 터미널에서 실행합니다.
 
-[![로컬 개발, GitHub, Jenkins, Kubernetes로 이어지는 배포 흐름](assets/delivery-flow.png)](assets/delivery-flow.png)
+```bash
+cd src/main/frontend
+npm ci
+npm start
+```
 
-#### 구축 과정
+기본 개발 서버 주소는 `http://localhost:3000`입니다. `src/main/frontend/src/Config.js`의 `API_BASE_URL`과 프론트엔드 `package.json`의 `proxy`를 백엔드 주소에 맞춥니다.
 
-- 코드 변경을 빌드에 연결하도록 클라우드 서버에 Jenkins를 설치하고 GitHub 저장소의 Webhook 연동.
-- 저장소에 코드를 push하면 Jenkins 빌드가 자동으로 시작되도록 설정하고 실행 결과 확인.
+## 관련 저장소
 
-#### 결과
+- [백엔드 저장소](https://github.com/unfl1/mylibraryback)
+- [프론트엔드 저장소](https://github.com/unfl1/mylibraryfront)
 
-- GitHub에 push한 코드의 변경 감지부터 Jenkins 빌드 실행까지 자동화해, 빌드를 수동으로 시작하는 과정 대체.
+## 포트폴리오
 
-### 3. k6 부하 테스트와 수동 Pod 확장
-
-#### 전체적인 아키텍처
-
-[![k6, 서버, Grafana를 활용한 부하 테스트와 모니터링](assets/load-monitoring.png)](assets/load-monitoring.png)
-
-#### 수행 과정
-
-- Kubernetes에 배포한 서비스를 대상으로 k6에서 HTTP 요청을 보내 부하 테스트 수행.
-- 부하 테스트 과정에서 Pod 수를 수동으로 늘려 서비스 실행 규모를 조정하는 스케일 아웃 수행.
-- Grafana 대시보드에서 배포 환경의 상태를 확인하며 테스트와 Pod 확장 과정 관찰.
-
-#### 결과
-
-- 배포된 서비스에 부하를 발생시키고 Pod를 수동 증설하는 과정을 통해, Kubernetes 실행 규모 조정과 상태 모니터링 경험 확보.
+컨테이너 구성, Kubernetes 배포, Jenkins 빌드 자동화, 부하 테스트와 수동 Pod 확장의 과정은 [나만의 도서관 포트폴리오](https://unfl1.github.io/portfolio/#mylibrary)에 정리했습니다.
