@@ -6,8 +6,6 @@
 
 React 프론트엔드와 Spring Boot 백엔드를 직접 개발하고, 이 서비스를 대상으로 컨테이너 구성과 클라우드 배포를 실습했습니다. GitHub와 Jenkins를 연결한 빌드 자동화, k6 부하 테스트, Kubernetes Pod의 수동 확장과 Grafana 상태 확인도 수행했습니다.
 
-이 저장소에는 Spring Boot 백엔드와 `src/main/frontend`의 React 프론트엔드가 함께 들어 있습니다.
-
 ## 주요 기능
 
 | 기능 | 설명 |
@@ -42,14 +40,6 @@ React 프론트엔드와 Spring Boot 백엔드를 직접 개발하고, 이 서�
 
 [![나만의 도서관 시스템 구조와 배포 환경](assets/system-overview.png)](assets/system-overview.png)
 
-- React에서 도서 공유 화면을 제공하고 Spring Boot API와 통신
-- Spring Boot에서 회원, 게시글, 이미지와 댓글을 처리하고 MariaDB에 데이터 저장
-- 프론트엔드와 백엔드 및 DB를 컨테이너로 구성해 Kubernetes 환경에서 실행
-- GitHub의 코드 변경을 Webhook으로 Jenkins에 전달해 빌드 실행
-- k6로 서비스에 HTTP 부하를 발생시키고 Grafana에서 배포 환경 상태 확인
-
-구조도는 프로젝트에서 실습한 전체 개발 및 배포 환경을 보여줍니다. 클라우드 실행 환경과 Jenkins 설정은 별도로 구성했으며, 아래는 이 저장소의 코드를 로컬에서 실행하는 방법입니다.
-
 ## 저장소 구성
 
 ```text
@@ -67,7 +57,7 @@ Java 17, MariaDB, Node.js와 npm이 필요합니다.
 
 ### 백엔드
 
-사용할 MariaDB 데이터베이스와 계정을 준비한 뒤 `src/main/resources/application.properties`의 DB 연결 정보를 실행 환경에 맞게 설정합니다. 이미지 저장에 사용하는 `upload.path`와 코드의 `uploads/` 경로도 확인해 주세요.
+사용할 MariaDB 데이터베이스와 계정을 준비한 뒤 `src/main/resources/application.properties`의 DB 연결 정보를 실행 환경에 맞게 설정합니다. 이미지 저장 경로는 `upload.path`와 코드의 `uploads/` 경로를 확인합니다.
 
 저장소 최상위에서 실행합니다.
 
@@ -96,4 +86,4 @@ npm start
 
 ## 포트폴리오
 
-컨테이너 구성, Kubernetes 배포, Jenkins 빌드 자동화, 부하 테스트와 수동 Pod 확장의 과정은 [나만의 도서관 포트폴리오](https://unfl1.github.io/portfolio/#mylibrary)에 정리했습니다.
+[구현 과정과 검증 결과](https://unfl1.github.io/portfolio/#mylibrary)
